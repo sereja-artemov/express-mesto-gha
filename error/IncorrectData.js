@@ -4,6 +4,6 @@ class IncorrectData extends Error {
     this.name = 'IncorrectData';
     this.statusCode = '400';
   }
-};
+}
 
 module.exports = IncorrectData;
