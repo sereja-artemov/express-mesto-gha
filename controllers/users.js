@@ -22,7 +22,7 @@ const getAllUsers = (req, res) => {
 
 const getUser = (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
-  UserModel.findById(req.params._id)
+  UserModel.findById(req.params.userId)
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'NotFound') {
