@@ -1,5 +1,5 @@
 const UserModel = require('../models/user');
-const IncorrectData = require('../error/IncorrectData');
+const ValidationError = require('../error/ValidationError');
 const NotFound = require('../error/NotFound');
 
 const createUser = (req, res) => {
@@ -8,7 +8,7 @@ const createUser = (req, res) => {
   UserModel.create({ name, about, avatar })
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === 'IncorrectData') {
+      if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       } else {
         res.status(500).send('Упс, что-то пошло не так');
@@ -19,7 +19,7 @@ const createUser = (req, res) => {
 const getAllUsers = (req, res) => {
   UserModel.find({})
     .then((users) => res.send(users))
-    .catch((err) => res.status(500).send('errrrr'));
+    .catch((err) => res.status(500).send('Упс, что-то пошло не так'));
 };
 
 const getUser = (req, res) => {
@@ -28,7 +28,9 @@ const getUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'NotFound') {
-        throw new NotFound('Пользователь по указанному _id не найден.');
+        res.status(400).send({ message: 'Пользователь по указанному _id не найден.' });
+      } else {
+        res.status(500).send('Упс, что-то пошло не так');
       }
     });
 };
@@ -40,9 +42,9 @@ const updateUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'NotFound') {
-        throw new NotFound('Пользователь с указанным _id не найден.');
-      } else if (err.name === 'IncorrectData') {
-        throw new IncorrectData('Переданы некорректные данные при обновлении профиля.');
+        res.status(404).send({ message: 'Пользователь с указанным _id не найден.' });
+      } else if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
       }
     });
 };
@@ -54,9 +56,9 @@ const updateAvatar = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'NotFound') {
-        throw new NotFound('Пользователь с указанным _id не найден.');
-      } else if (err.name === 'IncorrectData') {
-        throw new IncorrectData('Переданы некорректные данные при обновлении аватара.');
+        res.status(404).send({ message: 'Пользователь с указанным _id не найден.' });
+      } else if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       }
     });
 };

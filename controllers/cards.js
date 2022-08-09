@@ -1,13 +1,13 @@
 const cardModel = require('../models/card');
-const IncorrectData = require('../error/IncorrectData');
+const ValidationError = require('../error/ValidationError');
 const NotFound = require('../error/NotFound');
 
 const getAllCards = (req, res) => {
   cardModel.find({})
     .then((cards) => res.send(cards))
     .catch((err) => {
-      if (err.name === 'IncorrectData') {
-        throw new IncorrectData('Введены неправильные данные');
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Введены неправильные данные' });
       }
     });
 };
@@ -18,8 +18,8 @@ const createCard = (req, res) => {
   cardModel.create({ name, link, owner: req.user._id })
     .then((card) => res.send(card))
     .catch((err) => {
-      if (err.name === 'IncorrectData') {
-        throw new IncorrectData('Переданы некорректные данные при создании карточки.');
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
       }
     });
 };
@@ -29,7 +29,7 @@ const delCard = (req, res) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'NotFound') {
-        throw new NotFound('Карточка с указанным _id не найдена.');
+        res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
       }
     });
 };
@@ -43,9 +43,9 @@ const addLikeCard = (req, res) => {
     .then((likes) => res.send(likes))
     .catch((err) => {
       if (err.name === 'NotFound') {
-        throw new NotFound('Передан несуществующий _id карточки.');
-      } else if (err.name === 'IncorrectData') {
-        throw new IncorrectData('Переданы некорректные данные для постановки/снятии лайка');
+        res.status(404).send({ message: 'Передан несуществующий _id карточки.' });
+      } else if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
       }
     });
 };
@@ -59,9 +59,9 @@ const removeLikeCard = (req, res) => {
     .then((likes) => res.send(likes))
     .catch((err) => {
       if (err.name === 'NotFound') {
-        throw new NotFound('Передан несуществующий _id карточки.');
-      } else if (err.name === 'IncorrectData') {
-        throw new IncorrectData('Переданы некорректные данные для постановки/снятии лайка');
+        res.status(404).send({ message: 'Передан несуществующий _id карточки.' });
+      } else if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
       }
     });
 };
