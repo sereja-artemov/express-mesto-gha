@@ -19,14 +19,8 @@ const createUser = (req, res) => {
 
 const getAllUsers = (req, res) => {
   UserModel.find({})
-    .then((users) => res.send(users))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(errCode.ValidationError).send({ message: 'Пользователь по указанному _id не найден.' });
-      } else {
-        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
-      }
-    });
+    .then((users) => res.send({ data: users }))
+    .catch((err) => res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' }));
 };
 
 const getUser = async (req, res) => {
