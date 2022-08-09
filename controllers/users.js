@@ -37,10 +37,12 @@ const getUser = async (req, res) => {
     }
     res.status(200).send({ data: user });
   } catch (err) {
-    if (err.name === 'ValidationError') {
+    if (err instanceof NotFound) {
+      res.status(err.statusCode).send({ message: err.message });
+    } else if (err.name === 'ValidationError') {
       res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные' });
     } else {
-      res.status(errCode.ServerError).send('Ой, что-то сломалось');
+      res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
     }
   }
 };
@@ -59,7 +61,9 @@ const updateUser = async (req, res) => {
     }
     res.status(200).send({ data: user });
   } catch (err) {
-    if (err.name === 'ValidationError') {
+    if (err instanceof NotFound) {
+      res.status(err.statusCode).send({ message: err.message });
+    } else if (err.name === 'ValidationError') {
       res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
     } else {
       res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
@@ -79,7 +83,9 @@ const updateAvatar = (req, res) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof NotFound) {
+        res.status(err.statusCode).send({ message: err.message });
+      } else if (err.name === 'ValidationError') {
         res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
