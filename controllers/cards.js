@@ -8,7 +8,7 @@ const getAllCards = (req, res) => {
     .then((cards) => res.send(cards))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(errCode.BadRequestError).send({ message: 'Введены неправильные данные' });
+        res.status(errCode.ValidationError).send({ message: 'Введены неправильные данные' });
       } else {
         res.status(errCode.ServerError).send('Ой, что-то сломалось');
       }
@@ -22,7 +22,7 @@ const createCard = (req, res) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные при создании карточки.' });
+        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при создании карточки.' });
       } else {
         res.status(errCode.ServerError).send('Ой, что-то сломалось');
       }
