@@ -42,9 +42,9 @@ const delCard = (req, res) => {
         res.status(err.statusCode).send({ message: err.message });
       } else if (err.name === 'ValidationError') {
         res.status(errCode.ValidationError).send({ message: 'Введены некорректные данные' });
-      } else {
-        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
-      }
+      } // else {
+      //   res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+      // }
     });
 };
 
@@ -61,7 +61,9 @@ const addLikeCard = (req, res) => {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof NotFound) {
+        res.status(err.statusCode).send({ message: err.message });
+      } else if (err.name === 'ValidationError') {
         res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
@@ -82,7 +84,9 @@ const removeLikeCard = (req, res) => {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof NotFound) {
+        res.status(err.statusCode).send({ message: err.message });
+      } else if (err.name === 'ValidationError') {
         res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });

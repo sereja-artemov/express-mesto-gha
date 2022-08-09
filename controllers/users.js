@@ -39,7 +39,7 @@ const getUser = async (req, res) => {
   } catch (err) {
     if (err instanceof NotFound) {
       res.status(err.statusCode).send({ message: err.message });
-    } else if (err.name === 'BadRequestError') {
+    } else if (err.name === 'ValidationError') {
       res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
     } else {
       res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
