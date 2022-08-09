@@ -47,7 +47,7 @@ const addLikeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
-    .then((likes) => res.send(likes))
+    .then((likes) => res.send({ data: likes }))
     .catch((err) => {
       if (err.name === 'NotFound') {
         res.status(errCode.NotFoundError).send({ message: 'Передан несуществующий _id карточки.' });
