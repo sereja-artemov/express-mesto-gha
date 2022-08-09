@@ -35,7 +35,7 @@ const delCard = (req, res) => {
       if (!card) {
         throw new NotFound('Передан несуществующий _id карточки.');
       }
-      res.send({ data: card });
+      res.status(200).send({ data: card });
     })
     .catch((err) => {
       if (err instanceof NotFound) {
