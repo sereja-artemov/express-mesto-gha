@@ -38,7 +38,7 @@ const getUser = async (req, res) => {
     res.status(200).send({ data: user });
   } catch (err) {
     if (err instanceof NotFound) {
-      res.status(err.statusCode).send({ message: err.message });
+      res.status(errCode.NotFoundError).send({ message: err.message });
     } else if (err.name === 'ValidationError') {
       res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
     } else {
@@ -62,7 +62,7 @@ const updateUser = async (req, res) => {
     res.status(200).send({ data: user });
   } catch (err) {
     if (err instanceof NotFound) {
-      res.status(err.statusCode).send({ message: err.message });
+      res.status(errCode.NotFoundError).send({ message: err.message });
     } else if (err.name === 'ValidationError') {
       res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
     } else {
@@ -84,7 +84,7 @@ const updateAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err instanceof NotFound) {
-        res.status(err.statusCode).send({ message: err.message });
+        res.status(errCode.NotFoundError).send({ message: err.message });
       } else if (err.name === 'ValidationError') {
         res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       } else {
