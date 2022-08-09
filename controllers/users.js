@@ -12,7 +12,7 @@ const createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       } else {
-        res.status(errCode.ServerError).send('Ой, что-то сломалось');
+        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
       }
     });
 };
@@ -29,47 +29,60 @@ const getAllUsers = (req, res) => {
     });
 };
 
-const getUser = (req, res) => {
-  // eslint-disable-next-line no-underscore-dangle
-  UserModel.findById(req.params.userId)
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === 'NotFound') {
-        res.status(errCode.NotFoundError).send({ message: 'Пользователь по указанному _id не найден.' });
-      } else if (err.name === 'ValidationError') {
-        res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные' });
-      } else {
-        res.status(errCode.ServerError).send('Ой, что-то сломалось');
-      }
-    });
+const getUser = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.userId);
+    if (!user) {
+      throw new NotFound('Пользователь по указанному _id не найден.');
+    }
+    res.status(200).send({ data: user });
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные' });
+    } else {
+      res.status(errCode.ServerError).send('Ой, что-то сломалось');
+    }
+  }
 };
 
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
   const { name, about } = req.body;
 
-  UserModel.findByIdAndUpdate(req.user._id, { name, about })
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === 'NotFound') {
-        res.status(errCode.NotFoundError).send({ message: 'Пользователь с указанным _id не найден.' });
-      } else if (err.name === 'ValidationError') {
-        res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
-      } else {
-        res.status(errCode.ServerError).send('Ой, что-то сломалось');
-      }
-    });
+  try {
+    if (!name || !about) {
+      throw new ValidationError('Переданы некорректные данные');
+    }
+    // eslint-disable-next-line max-len
+    const user = UserModel.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true });
+    if (!user) {
+      throw new NotFound('Пользователь с указанным _id не найден.');
+    }
+    res.status(200).send({ data: user });
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
+    } else {
+      res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+    }
+  }
 };
 
 const updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  UserModel.findByIdAndUpdate(req.user._id, { avatar })
-    .then((user) => res.send(user))
+  // eslint-disable-next-line max-len
+  UserModel.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+    .then((user) => {
+      if (!user) {
+        throw new NotFound('Пользователь с указанным _id не найден.');
+      }
+      res.status(200).send({ data: user });
+    })
     .catch((err) => {
-      if (err.name === 'NotFound') {
-        res.status(errCode.NotFoundError).send({ message: 'Пользователь с указанным _id не найден.' });
-      } else if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
+      } else {
+        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
       }
     });
 };
