@@ -11,7 +11,7 @@ const createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       } else {
-        res.status(500).send('Упс, что-то пошло не так');
+        res.status(500).send('Ой, что-то сломалось');
       }
     });
 };
@@ -19,7 +19,7 @@ const createUser = (req, res) => {
 const getAllUsers = (req, res) => {
   UserModel.find({})
     .then((users) => res.send(users))
-    .catch((err) => res.status(500).send('Упс, что-то пошло не так'));
+    .catch((err) => res.status(500).send('Ой, что-то сломалось'));
 };
 
 const getUser = (req, res) => {
@@ -30,7 +30,7 @@ const getUser = (req, res) => {
       if (err.name === 'NotFound') {
         res.status(400).send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
-        res.status(500).send('Упс, что-то пошло не так');
+        res.status(500).send('Ой, что-то сломалось');
       }
     });
 };

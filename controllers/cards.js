@@ -8,6 +8,8 @@ const getAllCards = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Введены неправильные данные' });
+      } else {
+        res.status(500).send('Ой, что-то сломалось');
       }
     });
 };
@@ -20,6 +22,8 @@ const createCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
+      } else {
+        res.status(500).send('Ой, что-то сломалось');
       }
     });
 };
@@ -30,6 +34,8 @@ const delCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'NotFound') {
         res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
+      } else {
+        res.status(500).send('Ой, что-то сломалось');
       }
     });
 };
@@ -46,6 +52,8 @@ const addLikeCard = (req, res) => {
         res.status(404).send({ message: 'Передан несуществующий _id карточки.' });
       } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
+      } else {
+        res.status(500).send('Ой, что-то сломалось');
       }
     });
 };
@@ -62,6 +70,8 @@ const removeLikeCard = (req, res) => {
         res.status(404).send({ message: 'Передан несуществующий _id карточки.' });
       } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
+      } else {
+        res.status(500).send('Ой, что-то сломалось');
       }
     });
 };
