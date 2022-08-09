@@ -30,7 +30,7 @@ const createCard = (req, res) => {
 };
 
 const delCard = (req, res) => {
-  cardModel.findByIdAndRemove(req.params._id)
+  cardModel.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
         throw new NotFound('Передан несуществующий _id карточки.');
@@ -50,7 +50,7 @@ const delCard = (req, res) => {
 
 const addLikeCard = (req, res) => {
   cardModel.findByIdAndUpdate(
-    req.params._id,
+    req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
@@ -73,7 +73,7 @@ const addLikeCard = (req, res) => {
 
 const removeLikeCard = (req, res) => {
   cardModel.findByIdAndUpdate(
-    req.params._id,
+    req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
