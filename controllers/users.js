@@ -10,7 +10,7 @@ const createUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные при создании пользователя.' });
+        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
       }
@@ -22,7 +22,7 @@ const getAllUsers = (req, res) => {
     .then((users) => res.send(users))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(errCode.BadRequestError).send({ message: 'Пользователь по указанному _id не найден.' });
+        res.status(errCode.ValidationError).send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
       }
@@ -39,8 +39,8 @@ const getUser = async (req, res) => {
   } catch (err) {
     if (err instanceof NotFound) {
       res.status(err.statusCode).send({ message: err.message });
-    } else if (err.name === 'ValidationError') {
-      res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные' });
+    } else if (err.name === 'BadRequestError') {
+      res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
     } else {
       res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
     }
@@ -64,7 +64,7 @@ const updateUser = async (req, res) => {
     if (err instanceof NotFound) {
       res.status(err.statusCode).send({ message: err.message });
     } else if (err.name === 'ValidationError') {
-      res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
+      res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
     } else {
       res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
     }
@@ -86,7 +86,7 @@ const updateAvatar = (req, res) => {
       if (err instanceof NotFound) {
         res.status(err.statusCode).send({ message: err.message });
       } else if (err.name === 'ValidationError') {
-        res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
+        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
       }
