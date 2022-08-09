@@ -55,7 +55,7 @@ const updateUser = async (req, res) => {
       throw new ValidationError('Переданы некорректные данные');
     }
     // eslint-disable-next-line max-len
-    const user = UserModel.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true });
+    const user = await UserModel.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true });
     if (!user) {
       throw new NotFound('Пользователь с указанным _id не найден.');
     }
