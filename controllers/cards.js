@@ -65,7 +65,7 @@ const removeLikeCard = (req, res) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .then((likes) => res.send(likes))
+    .then((likes) => res.send({ data: likes }))
     .catch((err) => {
       if (err.name === 'NotFound') {
         res.status(errCode.NotFoundError).send({ message: 'Передан несуществующий _id карточки.' });

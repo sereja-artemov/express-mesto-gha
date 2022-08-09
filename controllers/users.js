@@ -20,7 +20,13 @@ const createUser = (req, res) => {
 const getAllUsers = (req, res) => {
   UserModel.find({})
     .then((users) => res.send(users))
-    .catch((err) => res.status(errCode.ServerError).send('Ой, что-то сломалось'));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(errCode.BadRequestError).send({ message: 'Пользователь по указанному _id не найден.' });
+      } else {
+        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+      }
+    });
 };
 
 const getUser = (req, res) => {
@@ -29,7 +35,9 @@ const getUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'NotFound') {
-        res.status(errCode.BadRequestError).send({ message: 'Пользователь по указанному _id не найден.' });
+        res.status(errCode.NotFoundError).send({ message: 'Пользователь по указанному _id не найден.' });
+      } else if (err.name === 'ValidationError') {
+        res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные' });
       } else {
         res.status(errCode.ServerError).send('Ой, что-то сломалось');
       }
@@ -46,6 +54,8 @@ const updateUser = (req, res) => {
         res.status(errCode.NotFoundError).send({ message: 'Пользователь с указанным _id не найден.' });
       } else if (err.name === 'ValidationError') {
         res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
+      } else {
+        res.status(errCode.ServerError).send('Ой, что-то сломалось');
       }
     });
 };
