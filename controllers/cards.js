@@ -42,9 +42,9 @@ const delCard = (req, res) => {
         res.status(err.statusCode).send({ message: err.message });
       } else if (err.name === 'ValidationError') {
         res.status(errCode.ValidationError).send({ message: 'Введены некорректные данные' });
-      } // else {
-      //   res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
-      // }
+      } else {
+        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+      }
     });
 };
 
@@ -81,7 +81,7 @@ const removeLikeCard = (req, res) => {
       if (!card) {
         throw new NotFound('Передан несуществующий _id карточки.');
       }
-      res.status(200).send({ data: card });
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err instanceof NotFound) {
