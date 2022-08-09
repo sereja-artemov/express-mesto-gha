@@ -52,7 +52,7 @@ const addLikeCard = (req, res) => {
       if (err.name === 'NotFound') {
         res.status(errCode.NotFoundError).send({ message: 'Передан несуществующий _id карточки.' });
       } else if (err.name === 'ValidationError') {
-        res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
+        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
       } else {
         res.status(errCode.ServerError).send('Ой, что-то сломалось');
       }
@@ -70,7 +70,7 @@ const removeLikeCard = (req, res) => {
       if (err.name === 'NotFound') {
         res.status(errCode.NotFoundError).send({ message: 'Передан несуществующий _id карточки.' });
       } else if (err.name === 'ValidationError') {
-        res.status(errCode.BadRequestError).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
+        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
       } else {
         res.status(errCode.ServerError).send('Ой, что-то сломалось');
       }
