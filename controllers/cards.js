@@ -35,12 +35,12 @@ const delCard = (req, res) => {
       if (!card) {
         throw new NotFound('Передан несуществующий _id карточки.');
       }
-      res.status(200).send({ data: card });
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err instanceof NotFound) {
         res.status(errCode.NotFoundError).send({ message: err.message });
-      } else if (err.name === 'ValidationError') {
+      } else if (err.name === 'CastError') {
         res.status(errCode.ValidationError).send({ message: 'Введены некорректные данные' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
@@ -63,7 +63,7 @@ const addLikeCard = (req, res) => {
     .catch((err) => {
       if (err instanceof NotFound) {
         res.status(errCode.NotFoundError).send({ message: err.message });
-      } else if (err.name === 'ValidationError') {
+      } else if (err.name === 'CastError') {
         res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
@@ -86,7 +86,7 @@ const removeLikeCard = (req, res) => {
     .catch((err) => {
       if (err instanceof NotFound) {
         res.status(errCode.NotFoundError).send({ message: err.message });
-      } else if (err.name === 'ValidationError') {
+      } else if (err.name === 'CastError') {
         res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные для постановки/снятии лайка' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
