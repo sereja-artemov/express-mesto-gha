@@ -27,12 +27,14 @@ const getUser = (req, res) => {
   UserModel.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(errCode.NotFoundError).send({ message: 'Пользователь с указанным _id не найден.' });
+        throw new NotFound('Пользователь с указанным _id не найден.');
       }
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof NotFound) {
+        res.status(errCode.NotFoundError).send({ message: err.message });
+      } else if (err.name === 'CastError') {
         res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
@@ -50,12 +52,14 @@ const updateUser = (req, res) => {
   UserModel.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        res.status(errCode.NotFoundError).send('Пользователь с указанным _id не найден.');
+        throw new NotFound('Пользователь с указанным _id не найден.');
       }
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof NotFound) {
+        res.status(errCode.NotFoundError).send({ message: err.message });
+      } else if (err.name === 'ValidationError') {
         res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
