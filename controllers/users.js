@@ -24,21 +24,21 @@ const getAllUsers = (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  try {
-    const user = await UserModel.findById(req.params.userId);
-    if (!user) {
-      throw new NotFound('Пользователь по указанному _id не найден.');
-    }
-    res.status(200).send({ data: user });
-  } catch (err) {
-    if (err instanceof NotFound) {
-      res.status(errCode.NotFoundError).send({ message: err.message });
-    } else if (err.name === 'CastError') {
-      res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
-    } else {
-      res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
-    }
-  }
+  UserModel.findById(req.params.userId)
+    .then((user) => {
+      res.status(200).send({ data: user });
+    })
+    .catch((err) => {
+      throw new NotFound('Пользователь с указанным _id не найден.');
+      // eslint-disable-next-line no-unreachable
+      if (err instanceof NotFound) {
+        res.status(errCode.NotFoundError).send({ message: err.message });
+      } else if (err.name === 'CastError') {
+        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
+      } else {
+        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+      }
+    });
 };
 
 const updateUser = async (req, res) => {
