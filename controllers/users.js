@@ -40,28 +40,27 @@ const getUser = (req, res) => {
     });
 };
 
-const updateUser = async (req, res) => {
+const updateUser = (req, res) => {
   const { name, about } = req.body;
 
-  try {
-    if (!name || !about) {
-      throw new ValidationError('Переданы некорректные данные');
-    }
-    // eslint-disable-next-line max-len
-    const user = await UserModel.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true });
-    if (!user) {
-      throw new NotFound('Пользователь с указанным _id не найден.');
-    }
-    res.status(200).send({ data: user });
-  } catch (err) {
-    if (err instanceof NotFound) {
-      res.status(errCode.NotFoundError).send({ message: err.message });
-    } else if (err.name === 'ValidationError') {
-      res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
-    } else {
-      res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
-    }
+  if (!name || !about) {
+    res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
   }
+
+  UserModel.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+    .then((user) => {
+      if (!user) {
+        res.status(errCode.NotFoundError).send('Пользователь с указанным _id не найден.');
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
+      } else {
+        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+      }
+    });
 };
 
 const updateAvatar = (req, res) => {
