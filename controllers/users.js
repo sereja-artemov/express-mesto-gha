@@ -23,17 +23,17 @@ const getAllUsers = (req, res) => {
     .catch((err) => res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' }));
 };
 
-const getUser = async (req, res) => {
+const getUser = (req, res) => {
   UserModel.findById(req.params.userId)
     .then((user) => {
-      res.status(200).send({ data: user });
+      if (user) {
+        res.send(user);
+      } else {
+        throw new NotFound('Пользователь с указанным _id не найден.');
+      }
     })
     .catch((err) => {
-      throw new NotFound('Пользователь с указанным _id не найден.');
-      // eslint-disable-next-line no-unreachable
-      if (err instanceof NotFound) {
-        res.status(errCode.NotFoundError).send({ message: err.message });
-      } else if (err.name === 'CastError') {
+      if (err.name === 'CastError') {
         res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
       } else {
         res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
