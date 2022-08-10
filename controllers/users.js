@@ -29,7 +29,7 @@ const getUser = (req, res) => {
       if (user) {
         res.send(user);
       } else {
-        throw new NotFound('Пользователь с указанным _id не найден.');
+        res.status(errCode.NotFoundError).send({ message: 'Пользователь с указанным _id не найден.' });
       }
     })
     .catch((err) => {
