@@ -6,13 +6,7 @@ const errCode = require('../const');
 const getAllCards = (req, res) => {
   cardModel.find({})
     .then((cards) => res.send(cards))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(errCode.ValidationError).send({ message: 'Введены неправильные данные' });
-      } else {
-        res.status(errCode.ServerError).send('Ой, что-то сломалось');
-      }
-    });
+    .catch((err) => res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' }));
 };
 
 const createCard = (req, res) => {

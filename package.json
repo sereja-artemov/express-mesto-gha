@@ -8,9 +8,9 @@
     "lint": "npx eslint .."
   },
   "keywords": [],
-  "author": "",
+  "author": "Sereja",
   "license": "ISC",
-  "description": "",
+  "description": "Учебный проект Mesto",
   "dependencies": {
     "express": "^4.18.1",
     "mongoose": "^6.5.1"
