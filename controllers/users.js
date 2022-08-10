@@ -26,11 +26,10 @@ const getAllUsers = (req, res) => {
 const getUser = (req, res) => {
   UserModel.findById(req.params.userId)
     .then((user) => {
-      if (user) {
-        res.send(user);
-      } else {
+      if (!user) {
         res.status(errCode.NotFoundError).send({ message: 'Пользователь с указанным _id не найден.' });
       }
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
