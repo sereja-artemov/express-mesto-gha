@@ -4,8 +4,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
-const login = require('./controllers/users')
-const createUser = require('./controllers/users')
+const auth = require('./middlewares/auth');
+const login = require('./controllers/users');
+const createUser = require('./controllers/users');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const NotFoundErr = require('./error/NotFound');
@@ -23,16 +24,20 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   console.log('Connected to MongoDB!!!');
 });
 
-app.use((req, res, next) => {
-  req.user = { _id: '62efd700628f2548788b5e17' };
-
-  next();
-});
+// app.use((req, res, next) => {
+//   req.user = { _id: '62efd700628f2548788b5e17' };
+//
+//   next();
+// });
 
 app.use(express.json());
-app.use('/users', usersRouter);
+
 app.post('/signin', login);
 app.post('/signup', createUser);
+
+app.use(auth);
+
+app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 
 app.use('*', (req, res) => {
