@@ -1,15 +1,51 @@
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserModel = require('../models/user');
 const ValidationError = require('../error/ValidationError');
 const NotFound = require('../error/NotFound');
 const errCode = require('../const');
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  UserModel.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+      // сравниваем переданный пароль и хеш из базы
+      return bcrypt.compare(password, user.password);
+    })
+    .then((matched) => {
+      if (!matched) {
+        // хеши не совпали — отклоняем промис
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+      // создаем токен
+      const { JWT_SECRET } = process.env;
+      const token = jwt.sign({ _id: matched._id }, JWT_SECRET);
+      res.cookie('jwt', token, {
+        maxAge: '7d',
+        httpOnly: true,
+        sameSite: true,
+      })
+        .end();
+    })
+    .catch((err) => {
+      res.status(401).send({ message: err.message });
+    });
+};
+
 const createUser = (req, res) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
 
   bcrypt.hash(password, 10)
     .then((hash) => {
-      UserModel.create({ name, about, avatar, email, password: hash });
+      UserModel.create({
+        name, about, avatar, email, password: hash,
+      });
     })
     .then((user) => res.send(user))
     .catch((err) => {
