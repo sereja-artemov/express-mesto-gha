@@ -23,9 +23,8 @@ const login = (req, res) => {
       }
       // создаем токен
       const { JWT_SECRET } = process.env;
-      const token = jwt.sign({ _id: matched._id }, JWT_SECRET);
+      const token = jwt.sign({ _id: matched._id }, JWT_SECRET, { expiresIn: '7d' });
       res.cookie('jwt', token, {
-        maxAge: '7d',
         httpOnly: true,
         sameSite: true,
       })
