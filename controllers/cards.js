@@ -1,6 +1,7 @@
 const cardModel = require('../models/card');
 const ValidationError = require('../error/ValidationError');
 const NotFound = require('../error/NotFound');
+const ForbiddenError = require('../error/ForbiddenError');
 const errCode = require('../const');
 
 const getAllCards = (req, res) => {
@@ -28,6 +29,8 @@ const delCard = (req, res) => {
     .then((card) => {
       if (!card) {
         throw new NotFound('Передан несуществующий _id карточки.');
+      } else if (card.owner._id === req.user._id) {
+        throw new ForbiddenError('Нельзя удалить чужую карточку.');
       }
       res.status(200).send({ data: card });
     })

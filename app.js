@@ -5,8 +5,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
 const auth = require('./middlewares/auth');
-const login = require('./controllers/users');
-const createUser = require('./controllers/users');
+const { login, createUser } = require('./controllers/users');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const NotFoundErr = require('./error/NotFound');
@@ -23,12 +22,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   if (err) throw err;
   console.log('Connected to MongoDB!!!');
 });
-
-// app.use((req, res, next) => {
-//   req.user = { _id: '62efd700628f2548788b5e17' };
-//
-//   next();
-// });
 
 app.use(express.json());
 
