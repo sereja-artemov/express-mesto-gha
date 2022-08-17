@@ -130,6 +130,7 @@ const updateAvatar = (req, res) => {
 };
 
 module.exports = {
+  login,
   createUser,
   getAllUsers,
   getUser,

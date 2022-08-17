@@ -4,6 +4,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
+const login = require('./controllers/users')
+const createUser = require('./controllers/users')
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const NotFoundErr = require('./error/NotFound');
@@ -29,6 +31,8 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 app.use('/users', usersRouter);
+app.post('/signin', login);
+app.post('/signup', createUser);
 app.use('/cards', cardsRouter);
 
 app.use('*', (req, res) => {
