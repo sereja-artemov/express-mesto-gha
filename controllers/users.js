@@ -57,6 +57,25 @@ const createUser = (req, res) => {
     });
 };
 
+const getCurrentUser = (req, res) => {
+  UserModel.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFound('Пользователь с указанным _id не найден.');
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err instanceof NotFound) {
+        res.status(errCode.NotFoundError).send({ message: err.message });
+      } else if (err.name === 'CastError') {
+        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
+      } else {
+        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+      }
+    });
+};
+
 const getAllUsers = (req, res) => {
   UserModel.find({})
     .then((users) => res.send({ data: users }))
@@ -133,6 +152,7 @@ module.exports = {
   login,
   createUser,
   getAllUsers,
+  getCurrentUser,
   getUser,
   updateUser,
   updateAvatar,
