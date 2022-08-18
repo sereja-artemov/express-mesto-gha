@@ -8,27 +8,20 @@ const errCode = require('../const');
 const login = (req, res) => {
   const { email, password } = req.body;
 
-  UserModel.findOne({ email })
+  return UserModel.findUserByCredentials(email, password)
+    // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
       }
-      // сравниваем переданный пароль и хеш из базы
-      return bcrypt.compare(password, user.password);
-    })
-    .then((matched) => {
-      if (!matched) {
-        // хеши не совпали — отклоняем промис
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
       // создаем токен
       const { JWT_SECRET } = process.env;
-      const token = jwt.sign({ _id: matched._id }, JWT_SECRET, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res.cookie('jwt', token, {
         httpOnly: true,
         sameSite: true,
-      })
-        .end();
+      });
+      res.send({ token });
     })
     .catch((err) => {
       res.status(401).send({ message: err.message });
@@ -41,7 +34,9 @@ const createUser = (req, res) => {
   } = req.body;
 
   bcrypt.hash(password, 10)
-    .then((hash) => UserModel.create({ name, about, avatar, email, password: hash }))
+    .then((hash) => UserModel.create({
+      name, about, avatar, email, password: hash,
+    }))
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {

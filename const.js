@@ -4,4 +4,6 @@ const ForbiddenError = 403;
 const AuthError = 401;
 const ServerError = 500;
 
-module.exports = { ValidationError, NotFoundError, ServerError, AuthError, ForbiddenError };
+module.exports = {
+  ValidationError, NotFoundError, ServerError, AuthError, ForbiddenError,
+};
