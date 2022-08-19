@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserModel = require('../models/user');
 const ValidationError = require('../error/ValidationError');
-const NotFound = require('../error/NotFound');
+const NotFound = require('../error/NotFoundError');
 const errCode = require('../const');
 
 const login = (req, res) => {
@@ -47,7 +47,7 @@ const createUser = (req, res) => {
     });
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   UserModel.findById(req.user._id)
     .then((user) => {
       if (!user) {
@@ -55,15 +55,16 @@ const getCurrentUser = (req, res) => {
       }
       res.send(user);
     })
-    .catch((err) => {
-      if (err instanceof NotFound) {
-        res.status(errCode.NotFoundError).send({ message: err.message });
-      } else if (err.name === 'CastError') {
-        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
-      } else {
-        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
-      }
-    });
+    .catch(next);
+  // .catch((err) => {
+  //   if (err instanceof NotFound) {
+  //     res.status(errCode.NotFoundError).send({ message: err.message });
+  //   } else if (err.name === 'CastError') {
+  //     res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
+  //   } else {
+  //     res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+  //   }
+  // });
 };
 
 const getAllUsers = (req, res) => {

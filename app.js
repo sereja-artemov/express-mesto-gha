@@ -9,7 +9,7 @@ const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
-const NotFoundErr = require('./error/NotFound');
+const NotFoundError = require('./error/NotFoundError');
 const errCode = require('./const');
 
 const app = express();
@@ -37,9 +37,9 @@ app.use('/users', usersRouter);
 
 app.use('*', (req, res) => {
   try {
-    throw new NotFoundErr('Страница не найдена');
+    throw new NotFoundError('Страница не найдена');
   } catch (err) {
-    if (err instanceof NotFoundErr) {
+    if (err instanceof NotFoundError) {
       res.status(errCode.NotFoundError).send({ message: err.message });
     }
   }
