@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const error = require('./middlewares/error');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const NotFoundErr = require('./error/NotFound');
@@ -43,5 +44,7 @@ app.use('*', (req, res) => {
     }
   }
 });
+
+app.use(error);
 
 app.listen(3000);
