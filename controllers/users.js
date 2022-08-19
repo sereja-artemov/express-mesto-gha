@@ -42,6 +42,8 @@ const createUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         // eslint-disable-next-line no-new
         new ValidationError('Переданы некорректные данные при создании пользователя.');
+      } else if (err.code === 11000) {
+        res.status(409).send({ message: err.message });
       } else {
         next(err);
       }
@@ -129,6 +131,8 @@ const updateAvatar = (req, res, next) => {
       if (err.name === 'CastError') {
         // eslint-disable-next-line no-new
         new Error('Переданы некорректные данные');
+      } else if (err.name === 'ValidationError') {
+        res.send({ message: err.errors.avatar.properties.message });
       } else {
         next(err);
       }
