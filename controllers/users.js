@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserModel = require('../models/user');
 const ValidationError = require('../error/ValidationError');
-const NotFound = require('../error/NotFound');
+const NotFound = require('../error/NotFoundError');
 const errCode = require('../const');
 
 const login = (req, res) => {
@@ -28,7 +28,7 @@ const login = (req, res) => {
     });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -40,14 +40,15 @@ const createUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при создании пользователя.' });
+        // eslint-disable-next-line no-new
+        new ValidationError('Переданы некорректные данные при создании пользователя.');
       } else {
-        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+        next(err);
       }
     });
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   UserModel.findById(req.user._id)
     .then((user) => {
       if (!user) {
@@ -56,23 +57,22 @@ const getCurrentUser = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err instanceof NotFound) {
-        res.status(errCode.NotFoundError).send({ message: err.message });
-      } else if (err.name === 'CastError') {
-        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
+      if (err.name === 'CastError') {
+      // eslint-disable-next-line no-new
+        new Error('Переданы некорректные данные');
       } else {
-        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+        next(err);
       }
     });
 };
 
-const getAllUsers = (req, res) => {
+const getAllUsers = (req, res, next) => {
   UserModel.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' }));
+    .catch((err) => next(err));
 };
 
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   UserModel.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -81,17 +81,16 @@ const getUser = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err instanceof NotFound) {
-        res.status(errCode.NotFoundError).send({ message: err.message });
-      } else if (err.name === 'CastError') {
-        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные' });
+      if (err.name === 'CastError') {
+        // eslint-disable-next-line no-new
+        new Error('Переданы некорректные данные');
       } else {
-        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+        next(err);
       }
     });
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, about } = req.body;
 
   if (!name || !about) {
@@ -106,17 +105,16 @@ const updateUser = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err instanceof NotFound) {
-        res.status(errCode.NotFoundError).send({ message: err.message });
-      } else if (err.name === 'ValidationError') {
-        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
+      if (err.name === 'CastError') {
+        // eslint-disable-next-line no-new
+        new Error('Переданы некорректные данные');
       } else {
-        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+        next(err);
       }
     });
 };
 
-const updateAvatar = (req, res) => {
+const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   // eslint-disable-next-line max-len
@@ -128,12 +126,11 @@ const updateAvatar = (req, res) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
-      if (err instanceof NotFound) {
-        res.status(errCode.NotFoundError).send({ message: err.message });
-      } else if (err.name === 'ValidationError') {
-        res.status(errCode.ValidationError).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
+      if (err.name === 'CastError') {
+        // eslint-disable-next-line no-new
+        new Error('Переданы некорректные данные');
       } else {
-        res.status(errCode.ServerError).send({ message: 'Ой, что-то сломалось' });
+        next(err);
       }
     });
 };
