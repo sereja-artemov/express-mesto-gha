@@ -16,12 +16,12 @@ const login = (req, res) => {
       }
       // создаем токен
       const { JWT_SECRET } = process.env;
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-      res.cookie('jwt', token, {
+      const jwtToken = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+      res.cookie('jwt', jwtToken, {
         httpOnly: true,
         sameSite: true,
       });
-      res.send({ token });
+      res.send({ token: jwtToken });
     })
     .catch((err) => {
       res.status(401).send({ message: err.message });
