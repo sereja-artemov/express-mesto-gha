@@ -24,7 +24,7 @@ const login = (req, res) => {
       res.send({ token: jwtToken });
     })
     .catch((err) => {
-      res.status(401).send({ message: err.message });
+      res.status(400).send({ message: err.message });
     });
 };
 
