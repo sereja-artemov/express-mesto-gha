@@ -32,7 +32,9 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-
+  if (password.length === 0) {
+    throw new ValidationError('Вы тупой или да? Введите пароль! Как заходить то будете?');
+  }
   bcrypt.hash(password, 10)
     .then((hash) => UserModel.create({
       name, about, avatar, email, password: hash,
@@ -61,7 +63,7 @@ const getCurrentUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
       // eslint-disable-next-line no-new
-        new Error('Переданы некорректные данные');
+        next(new Error('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -85,7 +87,7 @@ const getUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         // eslint-disable-next-line no-new
-        new Error('Переданы некорректные данные');
+        next(new Error('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -109,7 +111,7 @@ const updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         // eslint-disable-next-line no-new
-        new Error('Переданы некорректные данные');
+        next(new Error('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -130,7 +132,7 @@ const updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         // eslint-disable-next-line no-new
-        new Error('Переданы некорректные данные');
+        next(new Error('Переданы некорректные данные'));
       } else if (err.name === 'ValidationError') {
         res.send({ message: err.errors.avatar.properties.message });
       } else {
