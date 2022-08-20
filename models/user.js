@@ -28,13 +28,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Введите email'],
     unique: true,
-    validate: {
-      validator(v) {
-        // eslint-disable-next-line
-        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ig.test(v);
-      },
-      message: 'Ошибка! Это не email !!!',
-    },
+    // validate: {
+    //   validator(v) {
+    //     // eslint-disable-next-line
+    //     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ig.test(v);
+    //   },
+    //   message: 'Ошибка! Это не email !!!',
+    // },
   },
   password: {
     type: String,

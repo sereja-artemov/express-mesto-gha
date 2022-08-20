@@ -24,7 +24,7 @@ const login = (req, res) => {
       res.send({ token: jwtToken });
     })
     .catch((err) => {
-      res.status(400).send({ message: err.message });
+      res.status(401).send({ message: err.message });
     });
 };
 
@@ -134,7 +134,7 @@ const updateAvatar = (req, res, next) => {
         // eslint-disable-next-line no-new
         next(new Error('Переданы некорректные данные'));
       } else if (err.name === 'ValidationError') {
-        res.send({ message: err.errors.avatar.properties.message });
+        res.status(400).send({ message: err.errors.avatar.properties.message });
       } else {
         next(err);
       }
