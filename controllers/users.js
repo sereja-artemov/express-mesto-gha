@@ -2,17 +2,18 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserModel = require('../models/user');
 const ValidationError = require('../error/ValidationError');
+const UnauthorizedError = require('../error/UnauthorizedError');
 const NotFound = require('../error/NotFoundError');
 const errCode = require('../const');
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return UserModel.findUserByCredentials(email, password)
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        next(new UnauthorizedError('Неправильные почта или пароль'));
       }
       // создаем токен
       const { JWT_SECRET } = process.env;
@@ -24,7 +25,7 @@ const login = (req, res) => {
       res.send({ token: jwtToken });
     })
     .catch((err) => {
-      res.status(400).send({ message: err.message });
+      next(err);
     });
 };
 
@@ -89,7 +90,7 @@ const getUser = (req, res, next) => {
       if (!user) {
         throw new NotFound('Пользователь с указанным _id не найден.');
       }
-      res.send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
