@@ -32,9 +32,9 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  if (password.length === 0) {
-    throw new ValidationError('Вы тупой или да? Введите пароль! Как заходить то будете?');
-  }
+  // if (password.length === 0) {
+  //   throw new ValidationError('Вы тупой или да? Введите пароль! Как заходить то будете?');
+  // }
   bcrypt.hash(password, 10)
     .then((hash) => UserModel.create({
       name, about, avatar, email, password: hash,
