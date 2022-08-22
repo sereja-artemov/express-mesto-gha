@@ -9,20 +9,13 @@ const {
   updateAvatar,
 } = require('../controllers/users');
 
+usersRouter.get('/me', getCurrentUser);
 usersRouter.get('/', getAllUsers);
 usersRouter.get('/:userId', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    link: Joi.string().regex(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/).required().uri(),
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
   params: Joi.object().keys({
-    userId: Joi.string().required(),
+    userId: Joi.string().length(24).hex(),
   }),
 }), getUser);
-usersRouter.get('/me', getCurrentUser);
 usersRouter.patch('/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),

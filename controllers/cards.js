@@ -47,7 +47,7 @@ const addLikeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Передан несуществующий _id карточки.');
       }
-      return res.status(200).send({ data: card });
+      res.status(200).send({ data: card });
     })
     .catch(next);
 };
@@ -62,7 +62,7 @@ const removeLikeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Передан несуществующий _id карточки.');
       }
-      return res.status(200).send({ data: card });
+      res.status(200).send({ data: card });
     })
     .catch(next);
 };

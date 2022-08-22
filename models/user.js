@@ -18,13 +18,13 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-    // validate: {
-    //   validator(v) {
-    // eslint-disable-next-line max-len
-    //     return /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig.test(v);
-    //   },
-    //   message: 'Ошибка! Аватар не является ссылкой!',
-    // },
+    validate: {
+      validator(v) {
+        // eslint-disable-next-line max-len
+        return /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig.test(v);
+      },
+      message: 'Ошибка! Аватар не является ссылкой!',
+    },
   },
   email: {
     type: String,
@@ -39,17 +39,17 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = function (email, password) {
+userSchema.statics.findUserByCredentials = function (email, password, next) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new UnauthorizedError('Неправильные почта или пароль');
+        throw next(new UnauthorizedError('Неправильные почта или пароль'));
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new UnauthorizedError('Неправильные почта или пароль');
+            throw next(new UnauthorizedError('Неправильные почта или пароль'));
           }
 
           return user;
