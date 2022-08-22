@@ -6,7 +6,7 @@ const UnauthorizedError = require('../error/UnauthorizedError');
 const NotFound = require('../error/NotFoundError');
 const ConflictError = require('../error/ConflictError');
 const errCode = require('../const');
-const {NotFoundError} = require("../const");
+const { NotFoundError } = require('../const');
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
