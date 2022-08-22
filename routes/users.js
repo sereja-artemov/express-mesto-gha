@@ -28,7 +28,7 @@ usersRouter.patch('/me', celebrate({
 }), updateUser);
 usersRouter.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().uri({ scheme: /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig }),
+    avatar: Joi.string().uri(),
   }),
 }), updateAvatar);
 
