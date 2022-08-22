@@ -68,7 +68,7 @@ const getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Нет такого id'));
+        return next(new ValidationError('Нет такого id'));
       }
       return next(err);
     });
@@ -102,10 +102,9 @@ const updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         // eslint-disable-next-line no-new
-        next(new Error('Переданы некорректные данные'));
-      } else {
-        next(err);
+        return next(new ValidationError('Переданы некорректные данные'));
       }
+      next(err);
     });
 };
 
@@ -120,13 +119,7 @@ const updateAvatar = (req, res, next) => {
       }
       res.status(200).send({ data: user });
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new ValidationError('Введен некорректный адрес ссылки'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 module.exports = {
