@@ -22,7 +22,7 @@ const login = (req, res, next) => {
       });
       res.send({ token: jwtToken });
     })
-    .catch((err) => next(new UnauthorizedError('Неправильные почта или пароль')));
+    .catch(next);
 };
 
 const createUser = (req, res, next) => {

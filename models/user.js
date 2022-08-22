@@ -21,7 +21,8 @@ const userSchema = new mongoose.Schema({
     validate: {
       validator(v) {
         // eslint-disable-next-line max-len
-        return /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig.test(v);
+        // eslint-disable-next-line
+        return /^https?:\/\/(www\.)?[a-zA-Z\d]+\.[\w\-._~:\/?#[\]@!$&'()*+,;=]{2,}#?$/g.test(v);
       },
       message: 'Ошибка! Аватар не является ссылкой!',
     },

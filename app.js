@@ -37,7 +37,8 @@ app.post('/signup', celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().uri(),
     // eslint-disable-next-line max-len
-    // avatar: Joi.string().uri({ scheme: /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig }),
+    // eslint-disable-next-line
+    // avatar: Joi.string().uri({ scheme: /^https?:\/\/(www\.)?[a-zA-Z\d]+\.[\w\-._~:\/?#[\]@!$&'()*+,;=]{2,}#?$/g }),
   }),
 }), createUser);
 
