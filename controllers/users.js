@@ -6,6 +6,7 @@ const UnauthorizedError = require('../error/UnauthorizedError');
 const NotFound = require('../error/NotFoundError');
 const ConflictError = require('../error/ConflictError');
 const errCode = require('../const');
+const {NotFoundError} = require("../const");
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -76,18 +77,11 @@ const getUser = (req, res, next) => {
   UserModel.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        throw new NotFound('Пользователь с указанным _id не найден.');
+        return next(new NotFound('Пользователь с указанным _id не найден.'));
       }
-      res.status(200).send(user);
+      return res.status(200).send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        // eslint-disable-next-line no-new
-        next(new ValidationError('Переданы некорректные данные'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 const updateUser = (req, res, next) => {
@@ -126,14 +120,10 @@ const updateAvatar = (req, res, next) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        // eslint-disable-next-line no-new
-        next(new Error('Переданы некорректные данные'));
-      } else if (err.name === 'ValidationError') {
-        res.status(400).send({ message: err.errors.avatar.properties.message });
-      } else {
-        next(err);
+      if (err.name === 'ValidationError') {
+        next(new ValidationError(err.errors.avatar.properties.message));
       }
+      return next(err);
     });
 };
 

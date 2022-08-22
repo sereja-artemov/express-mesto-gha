@@ -13,14 +13,13 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   cardModel.create({ name, link, owner: req.user._id })
-    .then((card) => res.send(card))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         // eslint-disable-next-line no-new
-        new ValidationError('Переданы некорректные данные при создании карточки.');
-      } else {
-        next(err);
+        return next(new ValidationError('Переданы некорректные данные при создании карточки.'));
       }
+      return next(err);
     });
 };
 
