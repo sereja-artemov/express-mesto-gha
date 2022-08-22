@@ -3,10 +3,10 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-const { celebrate, Joi } = require('celebrate');
-const { errors } = require('celebrate');
+const {celebrate, Joi} = require('celebrate');
+const {errors} = require('celebrate');
 
-const { login, createUser } = require('./controllers/users');
+const {login, createUser} = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
 const usersRouter = require('./routes/users');
