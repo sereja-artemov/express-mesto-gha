@@ -4,6 +4,7 @@ const UserModel = require('../models/user');
 const ValidationError = require('../error/ValidationError');
 const UnauthorizedError = require('../error/UnauthorizedError');
 const NotFound = require('../error/NotFoundError');
+const ConflictError = require('../error/ConflictError');
 const errCode = require('../const');
 
 const login = (req, res, next) => {
@@ -22,7 +23,9 @@ const login = (req, res, next) => {
       res.send({ token: jwtToken });
     })
     .catch((err) => {
-      if (err.name === 'UnauthorizedError') {
+      if (err.name === 'ConflictError') {
+        next(new ConflictError('Такой пользователь уже существует'));
+      } else if (err.name === 'UnauthorizedError') {
         next(new UnauthorizedError('Неправильные почта или пароль'));
       } else {
         next(err);
@@ -50,11 +53,11 @@ const createUser = (req, res, next) => {
       },
     }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.code === 11000) {
+        res.status(409).send({ message: err.message });
+      } else if (err.name === 'ValidationError') {
         // eslint-disable-next-line no-new
         next(new ValidationError('Переданы некорректные данные при создании пользователя.'));
-      } else if (err.code === 11000) {
-        res.status(409).send({ message: err.message });
       } else {
         next(err);
       }
