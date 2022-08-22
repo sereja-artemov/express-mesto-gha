@@ -18,24 +18,18 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-    validate: {
-      validator(v) {
-        return /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig.test(v);
-      },
-      message: 'Ошибка! Аватар не является ссылкой!',
-    },
+    // validate: {
+    //   validator(v) {
+    // eslint-disable-next-line max-len
+    //     return /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig.test(v);
+    //   },
+    //   message: 'Ошибка! Аватар не является ссылкой!',
+    // },
   },
   email: {
     type: String,
     required: [true, 'Введите email'],
     unique: true,
-    // validate: {
-    //   validator(v) {
-    //     // eslint-disable-next-line
-    //     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ig.test(v);
-    //   },
-    //   message: 'Ошибка! Это не email !!!',
-    // },
   },
   password: {
     type: String,
