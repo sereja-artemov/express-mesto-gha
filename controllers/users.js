@@ -52,17 +52,6 @@ const createUser = (req, res, next) => {
     });
 };
 
-const getCurrentUser = (req, res, next) => {
-  UserModel.findById(req.user._id)
-    .then((user) => {
-      if (!user) {
-        return next(new NotFound('Пользователь с указанным _id не найден.'));
-      }
-      return res.status(200).send(user);
-    })
-    .catch(next);
-};
-
 const getAllUsers = (req, res, next) => {
   UserModel.find({})
     .then((users) => res.send({ data: users }))
@@ -73,7 +62,23 @@ const getUser = (req, res, next) => {
   UserModel.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        return next(new NotFound('Пользователь с указанным _id не найден.'));
+        throw next(new NotFound('Пользователь с указанным _id не найден.'));
+      }
+      return res.status(200).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Нет такого id'));
+      }
+      return next(err);
+    });
+};
+
+const getCurrentUser = (req, res, next) => {
+  UserModel.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw next(new NotFound('Пользователь с указанным _id не найден.'));
       }
       return res.status(200).send(user);
     })
