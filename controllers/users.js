@@ -66,12 +66,7 @@ const getUser = (req, res, next) => {
       }
       return res.status(200).send(user);
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return next(new ValidationError('Нет такого id'));
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 const getCurrentUser = (req, res, next) => {
@@ -116,7 +111,7 @@ const updateAvatar = (req, res, next) => {
       if (!user) {
         throw new NotFound('Пользователь с указанным _id не найден.');
       }
-      res.status(200).send({ data: user });
+      return res.status(200).send({ data: user });
     })
     .catch(next);
 };
