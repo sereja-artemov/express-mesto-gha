@@ -23,13 +23,7 @@ const login = (req, res, next) => {
       res.send({ token: jwtToken });
     })
     .catch((err) => {
-      if (err.name === 'ConflictError') {
-        next(new ConflictError('Такой пользователь уже существует'));
-      } else if (err.name === 'UnauthorizedError') {
-        next(new UnauthorizedError('Неправильные почта или пароль'));
-      } else {
-        next(err);
-      }
+      next(new UnauthorizedError('Неправильные почта или пароль'));
     });
 };
 
