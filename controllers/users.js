@@ -122,9 +122,10 @@ const updateAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError(err.errors.avatar.properties.message));
+        next(new ValidationError('Введен некорректный адрес ссылки'));
+      } else {
+        next(err);
       }
-      return next(err);
     });
 };
 

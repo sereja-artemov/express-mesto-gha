@@ -52,14 +52,9 @@ const addLikeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Передан несуществующий _id карточки.');
       }
-      res.status(200).send({ data: card });
+      return res.status(200).send({ data: card });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new ValidationError('Переданы некорректные данные для постановки/снятии лайка'));
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 const removeLikeCard = (req, res, next) => {
@@ -72,15 +67,9 @@ const removeLikeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Передан несуществующий _id карточки.');
       }
-      res.send({ data: card });
+      return res.send({ data: card });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        // eslint-disable-next-line no-new
-        return new ValidationError('Переданы некорректные данные для постановки/снятии лайка');
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 module.exports = {
