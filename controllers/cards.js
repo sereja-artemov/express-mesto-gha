@@ -51,10 +51,9 @@ const addLikeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error('Переданы некорректные данные для постановки/снятии лайка'));
-      } else {
-        next(err);
+        return next(new ValidationError('Переданы некорректные данные для постановки/снятии лайка'));
       }
+      return next(err);
     });
 };
 
@@ -73,10 +72,9 @@ const removeLikeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         // eslint-disable-next-line no-new
-        new Error('Переданы некорректные данные для постановки/снятии лайка');
-      } else {
-        next(err);
+        return new ValidationError('Переданы некорректные данные для постановки/снятии лайка');
       }
+      return next(err);
     });
 };
 

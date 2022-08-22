@@ -6,7 +6,6 @@ const UnauthorizedError = require('../error/UnauthorizedError');
 const NotFound = require('../error/NotFoundError');
 const ConflictError = require('../error/ConflictError');
 const errCode = require('../const');
-const {NotFoundError} = require("../const");
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -23,9 +22,7 @@ const login = (req, res, next) => {
       });
       res.send({ token: jwtToken });
     })
-    .catch((err) => {
-      next(new UnauthorizedError('Неправильные почта или пароль'));
-    });
+    .catch(next(new UnauthorizedError('Неправильные почта или пароль')));
 };
 
 const createUser = (req, res, next) => {
@@ -49,10 +46,9 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        res.status(409).send({ message: err.message });
-      } else {
-        next(err);
+        return res.status(409).send({ message: err.message });
       }
+      return next(err);
     });
 };
 
@@ -64,13 +60,13 @@ const getCurrentUser = (req, res, next) => {
       }
       return res.status(200).send(user);
     })
-    .catch((next));
+    .catch(next);
 };
 
 const getAllUsers = (req, res, next) => {
   UserModel.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 const getUser = (req, res, next) => {
