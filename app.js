@@ -59,7 +59,7 @@ app.use('*', (req, res) => {
     throw new NotFoundError('Страница не найдена');
   } catch (err) {
     if (err instanceof NotFoundError) {
-      res.status(errCode.NotFoundError).send({message: err.message});
+      res.status(errCode.NotFoundError).send({ message: err.message });
     }
   }
 });
