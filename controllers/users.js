@@ -101,10 +101,9 @@ const updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // eslint-disable-next-line no-new
         return next(new ValidationError('Переданы некорректные данные'));
       }
-      next(err);
+      return next(err);
     });
 };
 
