@@ -9,7 +9,7 @@ cardsRouter.get('/', getAllCards);
 cardsRouter.post('/', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().uri(),
+    link: Joi.string().regex(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/).required().uri(),
   }),
 }), createCard);
 cardsRouter.delete('/:cardId', celebrate({

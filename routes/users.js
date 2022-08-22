@@ -14,7 +14,7 @@ usersRouter.get('/:userId', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().uri(),
+    link: Joi.string().regex(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/).required().uri(),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
@@ -31,7 +31,7 @@ usersRouter.patch('/me', celebrate({
 }), updateUser);
 usersRouter.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().uri(),
+    link: Joi.string().regex(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/).required().uri(),
   }),
 }), updateAvatar);
 
