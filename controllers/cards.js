@@ -17,15 +17,10 @@ const createCard = (req, res, next) => {
       card: {
         name: card.name,
         link: card.link,
+        id: card._id,
       },
     }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        // eslint-disable-next-line no-new
-        return next(new ValidationError('Переданы некорректные данные при создании карточки.'));
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 const delCard = (req, res, next) => {
@@ -37,7 +32,7 @@ const delCard = (req, res, next) => {
         throw new ForbiddenError('Нельзя удалить чужую карточку.');
       }
       card.remove();
-      res.status(200).send({ data: card });
+      return res.status(200).send({ data: card });
     })
     .catch(next);
 };
@@ -67,7 +62,7 @@ const removeLikeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Передан несуществующий _id карточки.');
       }
-      return res.send({ data: card });
+      return res.status(200).send({ data: card });
     })
     .catch(next);
 };
