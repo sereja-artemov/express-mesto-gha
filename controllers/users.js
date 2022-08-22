@@ -59,18 +59,11 @@ const getCurrentUser = (req, res, next) => {
   UserModel.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFound('Пользователь с указанным _id не найден.');
+        return next(new NotFound('Пользователь с указанным _id не найден.'));
       }
-      res.send(user);
+      return res.status(200).send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-      // eslint-disable-next-line no-new
-        next(new Error('Переданы некорректные данные'));
-      } else {
-        next(err);
-      }
-    });
+    .catch((next));
 };
 
 const getAllUsers = (req, res, next) => {
@@ -90,7 +83,7 @@ const getUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         // eslint-disable-next-line no-new
-        next(new Error('Переданы некорректные данные'));
+        next(new ValidationError('Переданы некорректные данные'));
       } else {
         next(err);
       }

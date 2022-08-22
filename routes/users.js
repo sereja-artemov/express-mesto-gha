@@ -18,6 +18,9 @@ usersRouter.get('/:userId', celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
+  params: Joi.object().keys({
+    userId: Joi.string().required(),
+  }),
 }), getUser);
 usersRouter.get('/me', getCurrentUser);
 usersRouter.patch('/me', celebrate({

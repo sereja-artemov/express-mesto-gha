@@ -29,13 +29,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(express.json());
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-    userId: Joi.string().alphanum(),
-  }),
-}), login);
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -48,6 +41,14 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+    userId: Joi.string().alphanum(),
+  }),
+}), login);
+
 app.use(auth);
 
 app.use('/users', usersRouter);
@@ -58,7 +59,7 @@ app.use('*', (req, res) => {
     throw new NotFoundError('Страница не найдена');
   } catch (err) {
     if (err instanceof NotFoundError) {
-      res.status(errCode.NotFoundError).send({ message: err.message });
+      res.status(errCode.NotFoundError).send({message: err.message});
     }
   }
 });
