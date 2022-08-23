@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const isEmail = require('validator/lib/isEmail');
 const { UnauthorizedError } = require('../error/UnauthorizedError');
 
 const userSchema = new mongoose.Schema({
@@ -31,6 +32,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Введите email'],
     unique: true,
+    validate: {
+      validator: (v) => isEmail(v),
+      message: 'Некорректный формат почты',
+    },
   },
   password: {
     type: String,
