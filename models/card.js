@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const isURL = require('validator/lib/isURL');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -11,12 +12,8 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        // eslint-disable-next-line max-len
-        // eslint-disable-next-line
-        return /^https?:\/\/(www\.)?[a-zA-Z\d]+\.[\w\-._~:\/?#[\]@!$&'()*+,;=]{2,}#?$/g.test(v);
-      },
-      message: 'Ошибка валидации ссылки',
+      validator: (v) => isURL(v),
+      message: 'Некорректный формат ссылки',
     },
   },
   owner: {

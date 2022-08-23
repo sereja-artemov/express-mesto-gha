@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const UnauthorizedError = require('../error/UnauthorizedError');
 
 const { JWT_SECRET } = process.env;
 // eslint-disable-next-line consistent-return
@@ -9,7 +10,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    return res.status(401).send({ message: 'Необходима авторизация' });
+    throw next(new UnauthorizedError('Необходима авторизация'));
   }
   req.user = payload;
   next();

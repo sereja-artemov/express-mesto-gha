@@ -40,12 +40,6 @@ const patchUserValidation = celebrate({
   }),
 });
 
-const patchAvatarValidation = celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string().custom(checkValidUrl),
-  }),
-});
-
 const createCardValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
@@ -59,12 +53,18 @@ const cardIdValidation = celebrate({
   }),
 });
 
+const patchAvatarValidation = celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().custom(checkValidUrl),
+  }),
+});
+
 module.exports = {
   signupValidation,
   signinValidation,
   getUserValidation,
   patchUserValidation,
-  patchAvatarValidation,
   createCardValidation,
   cardIdValidation,
+  patchAvatarValidation,
 };

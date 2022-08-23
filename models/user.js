@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const isEmail = require('validator/lib/isEmail');
+const isURL = require('validator/lib/isURL');
 const UnauthorizedError = require('../error/UnauthorizedError');
 
 const userSchema = new mongoose.Schema({
@@ -20,12 +21,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator(v) {
-        // eslint-disable-next-line max-len
-        // eslint-disable-next-line
-        return /^https?:\/\/(www\.)?[a-zA-Z\d]+\.[\w\-._~:\/?#[\]@!$&'()*+,;=]{2,}#?$/g.test(v);
-      },
-      message: 'Ошибка! Аватар не является ссылкой!',
+      validator: (v) => isURL(v),
+      message: 'Некорректный формат ссылки',
     },
   },
   email: {

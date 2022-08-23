@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserModel = require('../models/user');
 const ValidationError = require('../error/ValidationError');
+const ConflictError = require('../error/ConflictError');
 const NotFound = require('../error/NotFoundError');
 const errCode = require('../const');
 
@@ -42,7 +43,7 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        res.status(409).send({ message: err.message });
+        throw new ConflictError('Такой email уже существует');
       }
       next(err);
     });

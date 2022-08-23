@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node --inspect app.js",
     "dev": "nodemon --inspect app.js",
-    "lint": "npx eslint .."
+    "lint": "npx eslint ."
   },
   "keywords": [],
   "author": "Sereja",
