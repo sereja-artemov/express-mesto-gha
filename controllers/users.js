@@ -2,9 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserModel = require('../models/user');
 const ValidationError = require('../error/ValidationError');
-const UnauthorizedError = require('../error/UnauthorizedError');
 const NotFound = require('../error/NotFoundError');
-const ConflictError = require('../error/ConflictError');
 const errCode = require('../const');
 
 const login = (req, res, next) => {
@@ -29,9 +27,7 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  // if (password.length === 0) {
-  //   throw new ValidationError('Вы тупой или да? Введите пароль! Как заходить то будете?');
-  // }
+
   bcrypt.hash(password, 10)
     .then((hash) => UserModel.create({
       name, about, avatar, email, password: hash,
