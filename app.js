@@ -13,10 +13,12 @@ const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const NotFoundError = require('./error/NotFoundError');
 const errCode = require('./const');
+const { signupValidation, signinValidation } = require('./middlewares/validations');
 
 const app = express();
 
 app.use(cookieParser());
+app.use(express.json());
 
 // подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -27,28 +29,9 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   console.log('Connected to MongoDB!!!');
 });
 
-app.use(express.json());
+app.post('/signup', signupValidation, createUser);
 
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string(),
-    // eslint-disable-next-line max-len
-    // eslint-disable-next-line
-    // avatar: Joi.string().uri({ scheme: /^https?:\/\/(www\.)?[a-zA-Z\d]+\.[\w\-._~:\/?#[\]@!$&'()*+,;=]{2,}#?$/g }),
-  }),
-}), createUser);
-
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-    userId: Joi.string().alphanum(),
-  }),
-}), login);
+app.post('/signin', signinValidation, login);
 
 app.use(auth);
 
