@@ -17,6 +17,7 @@ const createCard = (req, res, next) => {
       card: {
         name: card.name,
         link: card.link,
+        _id: card._id,
       },
     }))
     .catch(next);
