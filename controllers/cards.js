@@ -32,7 +32,7 @@ const delCard = (req, res, next) => {
         throw new ForbiddenError('Нельзя удалить чужую карточку.');
       }
       card.remove();
-      return res.status(200).send({ data: card });
+      res.status(200).send({ data: card });
     })
     .catch(next);
 };

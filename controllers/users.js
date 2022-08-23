@@ -42,9 +42,9 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        return res.status(409).send({ message: err.message });
+        res.status(409).send({ message: err.message });
       }
-      return next(err);
+      next(err);
     });
 };
 
@@ -60,7 +60,7 @@ const getUser = (req, res, next) => {
       if (!user) {
         throw next(new NotFound('Пользователь с указанным _id не найден.'));
       }
-      return res.status(200).send(user);
+      res.status(200).send(user);
     })
     .catch(next);
 };
@@ -71,7 +71,7 @@ const getCurrentUser = (req, res, next) => {
       if (!user) {
         throw next(new NotFound('Пользователь с указанным _id не найден.'));
       }
-      return res.status(200).send(user);
+      res.status(200).send(user);
     })
     .catch(next);
 };
@@ -92,7 +92,7 @@ const updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new ValidationError('Переданы некорректные данные'));
+        next(new ValidationError('Переданы некорректные данные'));
       }
       return next(err);
     });
@@ -107,7 +107,7 @@ const updateAvatar = (req, res, next) => {
       if (!user) {
         throw new NotFound('Пользователь с указанным _id не найден.');
       }
-      return res.status(200).send({ data: user });
+      res.status(200).send({ data: user });
     })
     .catch(next);
 };
