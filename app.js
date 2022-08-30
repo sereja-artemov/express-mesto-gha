@@ -14,6 +14,7 @@ const cardsRouter = require('./routes/cards');
 const NotFoundError = require('./error/NotFoundError');
 const errCode = require('./const');
 const { signupValidation, signinValidation } = require('./middlewares/validations');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
@@ -29,6 +30,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   console.log('Connected to MongoDB!!!');
 });
 
+app.use(requestLogger);
 app.post('/signup', signupValidation, createUser);
 
 app.post('/signin', signinValidation, login);
@@ -47,6 +49,8 @@ app.use('*', (req, res) => {
     }
   }
 });
+
+app.use(errorLogger); // подключаем логгер ошибок
 
 app.use(errors());
 app.use(error);
